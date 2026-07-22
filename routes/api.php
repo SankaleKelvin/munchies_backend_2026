@@ -3,16 +3,26 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\ResendVerificationController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\VerificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 //Public Routes
 Route::post('register-user', [AuthController::class, 'register']);    
 Route::post('login-user', [AuthController::class, 'login']);
-
 Route::get('get-roles', [RoleController::class, 'readRoles']);
+
+//Email Verification
+Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
+              ->name('verification.verify')
+              ->middleware(['signed', 'throttle:6,1']);
+//Resend Verification
+Route::post('/email/resend', [ResendVerificationController::class, 'resend'])
+              ->middleware('throttle:6,1');
+
 
 //Protected Routes
 Route::middleware('auth:sanctum')->group(function(){
