@@ -6,6 +6,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ResendVerificationController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\VerificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -58,5 +59,12 @@ Route::get('get-menus', [MenuController::class, 'readMenus']);
 Route::get('get-menu/{id}', [MenuController::class, 'readMenu']);
 Route::post('update-menu/{id}', [MenuController::class, 'updateMenu']);
 Route::delete('delete-menu/{id}', [MenuController::class, 'deleteMenu']);
+      
+       //User
+Route::post('save-user', [UserController::class, 'createUser']);
+Route::get('get-users', [UserController::class, 'readUsers']);
+Route::get('get-user/{id}', [UserController::class, 'readUser']);
+Route::post('update-user/{id}', [UserController::class, 'updateUser']);
+Route::delete('delete-user/{id}', [UserController::class, 'deleteUser']);
 
 });

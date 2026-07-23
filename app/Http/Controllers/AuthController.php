@@ -20,6 +20,7 @@ class AuthController extends Controller
             'name' => 'required|string',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:4|confirmed',
+            'user_image'=>'nullable|image|mimes:jpg,png,jpeg|max:2048',
             'role_id'=>'required|integer|exists:roles,id'
         ]);
 
@@ -27,6 +28,7 @@ class AuthController extends Controller
         $user->name = $validated['name'];
         $user->email = $validated['email'];
         $user->password = Hash::make($validated['password']);
+        $user->user_image = $validated['user_image'];
         $user->role_id = $validated['role_id'];
 
         try {
@@ -78,7 +80,8 @@ class AuthController extends Controller
             return response()->json([
                 'message' => 'Login Successful!',
                 'User' => $user,
-                'token' => $token
+                'token' => $token,
+               // 'abilities'=>$user->abilities()
             ], 201);
         } catch (Exception $exception) {
             return response()->json([

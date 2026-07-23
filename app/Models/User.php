@@ -20,6 +20,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'user_image',
+        'is_active',
+        'role_id'
     ];
 
     protected function casts(): array
@@ -29,4 +32,5 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
 }
