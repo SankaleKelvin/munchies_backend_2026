@@ -33,4 +33,16 @@ class User extends Authenticatable
         ];
     }
 
+    public function roles(){
+        return $this->belongsTo(Role::class);
+    }
+
+    public function abilities(){
+        return [
+            'administrator' => $this->roles?->slug === 'administrator',
+            'chef' => $this->roles?->slug === 'chef',
+            'customer' => $this->roles?->slug === 'customer',
+        ];
+    }
+
 }

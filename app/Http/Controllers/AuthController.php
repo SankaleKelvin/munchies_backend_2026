@@ -20,8 +20,8 @@ class AuthController extends Controller
             'name' => 'required|string',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:4|confirmed',
-            'user_image'=>'nullable|image|mimes:jpg,png,jpeg|max:2048',
-            'role_id'=>'required|integer|exists:roles,id'
+            'user_image' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
+            'role_id' => 'required|integer|exists:roles,id'
         ]);
 
         $user = new User();
@@ -49,7 +49,7 @@ class AuthController extends Controller
                 'Message' => 'A verification link has been sent to your email address.'
             ], 200);
         } catch (Exception $exception) {
-            return response()->json(["Error: "=> $exception->getMessage()]);
+            return response()->json(["Error: " => $exception->getMessage()]);
         }
     }
 
@@ -62,16 +62,19 @@ class AuthController extends Controller
         ]);
 
         try {
-            $user = User::where('email', $validated['email'])->first();
+            $user = User::join('roles', 'users.role_id', '=', 'roles.id')
+                        ->where('users.email', $validated['email'])
+                        ->select('users.*', 'roles.name as role_name')
+                        ->first();
             if (!$user || !Hash::check($validated['password'], $user->password)) {
                 throw ValidationException::withMessages([
                     'email' => 'The provided credentials are incorrect.'
                 ]);
             }
 
-            if(!$user->is_active){
+            if (!$user->is_active) {
                 return response()->json([
-                    'message'=>'Your account is not activated, please verify your email.'
+                    'message' => 'Your account is not activated, please verify your email.'
                 ]);
             }
 
@@ -81,7 +84,7 @@ class AuthController extends Controller
                 'message' => 'Login Successful!',
                 'User' => $user,
                 'token' => $token,
-               // 'abilities'=>$user->abilities()
+                'abilities' => $user->abilities()
             ], 201);
         } catch (Exception $exception) {
             return response()->json([
